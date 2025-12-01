@@ -1,0 +1,16 @@
+{
+  "name": "priceencryptiondecryptionjs",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "encrypt-decrypt":"node encrypt.js && node decrypt.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "crypto": "^1.0.1"
+  }
+}
