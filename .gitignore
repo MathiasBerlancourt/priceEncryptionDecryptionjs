@@ -35,3 +35,11 @@ Thumbs.db
 
 # VS Code settings
 .vscode/
+
+# Express-related (optional)
+# Static files folder if you add one
+public/
+
+# Build artifacts if using TypeScript later
+dist/
+build/

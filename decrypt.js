@@ -59,5 +59,6 @@ const decrypt=(cipherBuffer, encryptionKey, integrityKey)=>{
 
 // Output
 const encrypted = base64UrlToBuffer(encryptedPrice);
+const decrypted= decrypt(encrypted, encryptionKey, integrityKey);
 
-console.log("Decrypted:", decrypt(encrypted, encryptionKey, integrityKey));
+console.log( `🟢 Decrypted in ${decrypted}`);

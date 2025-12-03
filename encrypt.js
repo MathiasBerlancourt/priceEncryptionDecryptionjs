@@ -2,6 +2,7 @@
 const crypto = require("crypto");
 const { encryptionKey, integrityKey, price } = require("./data.json");
 const {writeFileSync}=require('fs');
+//iv=initialization vector
 
 const generateKeystream=(key, iv, length)=>{
     const blocks = [];
