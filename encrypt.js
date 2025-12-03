@@ -1,7 +1,7 @@
 // encrypt.js
 const crypto = require("crypto");
-const { encryptionKey, integrityKey, price } = require("./data.json");
-const {writeFileSync}=require('fs');
+//const { encryptionKey, integrityKey, price } = require("./data.json");
+//const {writeFileSync}=require('fs');
 //iv=initialization vector
 
 const generateKeystream=(key, iv, length)=>{
@@ -46,6 +46,7 @@ const encrypt=(price, encryptionKey, integrityKey)=>{
 }
 
 // Execute encryption
+/*
 const encrypted = encrypt(price, encryptionKey, integrityKey);
 console.log("Encrypted (hex):", encrypted.toString("hex"));
 console.log("Encrypted (base64url):", encrypted.toString("base64url"));
@@ -63,4 +64,5 @@ try {
       console.log('An error has occurred ', error);
 
 }
-
+ */
+module.exports = { encrypt };

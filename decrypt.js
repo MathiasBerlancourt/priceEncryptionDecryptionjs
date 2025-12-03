@@ -1,7 +1,7 @@
 // decrypt.js
 const crypto = require("crypto");
-const { encryptionKey, integrityKey } = require('./data.json');
-const encryptedPrice=require('./encrypted.json');
+//const { encryptionKey, integrityKey } = require('./data.json');
+//const encryptedPrice=require('./encrypted.json');
 
 
 const base64UrlToBuffer=(base64Url)=> {
@@ -22,43 +22,44 @@ const generateKeystream=(key, iv, length)=>{
 
     return Buffer.concat(blocks).slice(0, length);
 }
+const decrypt = (cipherBuffer, encryptionKey, integrityKey) => {
+  const IV_SIZE = 16;
+  const SIG_SIZE = 4;
 
-const decrypt=(cipherBuffer, encryptionKey, integrityKey)=>{
-    const IV_SIZE = 16;
-    const SIG_SIZE = 4;
+  if (cipherBuffer.length < IV_SIZE + SIG_SIZE)
+    throw new Error("Encrypted buffer too short.");
 
-    if (cipherBuffer.length < IV_SIZE + SIG_SIZE)
-        throw new Error("Encrypted buffer too short.");
+  const iv = cipherBuffer.slice(0, IV_SIZE);
+  const ciphertext = cipherBuffer.slice(IV_SIZE, cipherBuffer.length - SIG_SIZE);
+  const signature = cipherBuffer.slice(cipherBuffer.length - SIG_SIZE);
 
-    const iv = cipherBuffer.slice(0, IV_SIZE);
-    const ciphertext = cipherBuffer.slice(IV_SIZE, cipherBuffer.length - SIG_SIZE);
-    const signature = cipherBuffer.slice(cipherBuffer.length - SIG_SIZE);
+  const keystream = generateKeystream(encryptionKey, iv, ciphertext.length);
 
-    // Generate keystream
-    const keystream = generateKeystream(encryptionKey, iv, ciphertext.length);
+  const plaintext = Buffer.alloc(ciphertext.length);
+  for (let i = 0; i < ciphertext.length; i++) {
+    plaintext[i] = ciphertext[i] ^ keystream[i];
+  }
 
-    // XOR decryption
-    const plaintext = Buffer.alloc(ciphertext.length);
-    for (let i = 0; i < ciphertext.length; i++) {
-        plaintext[i] = ciphertext[i] ^ keystream[i];
-    }
+  const fullSig = crypto
+    .createHmac("sha1", integrityKey)
+    .update(Buffer.concat([plaintext, iv]))
+    .digest();
 
-    // Verify signature
-    const clearPlusIv = Buffer.concat([plaintext, iv]);
-    const fullSig = crypto
-        .createHmac("sha1", integrityKey)
-        .update(clearPlusIv)
-        .digest();
+  if (!fullSig.slice(0, SIG_SIZE).equals(signature)) {
+    throw new Error("Signature mismatch — tampered or corrupted data.");
+  }
 
-    if (!fullSig.slice(0, SIG_SIZE).equals(signature)) {
-        throw new Error("Signature mismatch — tampered or corrupted data.");
-    }
+  return plaintext.toString("utf8");
+};
 
-    return plaintext.toString("utf8");
-}
-
+/*
 // Output
-const encrypted = base64UrlToBuffer(encryptedPrice);
-const decrypted= decrypt(encrypted, encryptionKey, integrityKey);
+//transform the encrypted Price base64Url to Buffer
+const encryptedBuffer = base64UrlToBuffer(encryptedPrice);
+
+//Then Decrypt with the function Decrypt
+const decrypted= decrypt(encryptedBuffer, encryptionKey, integrityKey);
 
 console.log( `🟢 Decrypted in ${decrypted}`);
+*/
+module.exports = { decrypt, base64UrlToBuffer };
