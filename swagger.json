@@ -2,7 +2,7 @@
   "openapi": "3.0.4",
   "info": {
     "title": "Price Encryption API",
-    "description": "API to encrypt and decrypt prices.Additional Information",
+    "description": "API to encrypt and decrypt prices. <h4>Additional Information </h4>",
     "version": "1.0.0"
   },
   "servers": [
@@ -22,7 +22,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/HealthResponse"
+                  "type": "object",
+                  "properties": {
+                    "status": { "type": "string", "example": "OK" }
+                  }
                 }
               }
             }
@@ -34,16 +37,6 @@
       "post": {
         "tags": ["Encryption"],
         "summary": "Encrypt a price",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/EncryptRequest"
-              }
-            }
-          }
-        },
         "parameters": [
           {
             "name": "encryptionKey",
@@ -58,13 +51,33 @@
             "schema": { "type": "string" }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "price": { "type": "string", "example": "123.45" }
+                },
+                "required": ["price"]
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Encrypted price",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EncryptResponse"
+                  "type": "object",
+                  "properties": {
+                    "encryptedPrice": {
+                      "type": "string",
+                      "example": "55mPuzTBIUqep2Kx_tebpjBGWi_5Y7jBFAOP"
+                    }
+                  }
                 }
               }
             }
@@ -74,7 +87,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "body": { "type": "object" }
+                  }
                 }
               }
             }
@@ -84,7 +101,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "details": { "type": "string" }
+                  }
                 }
               }
             }
@@ -96,16 +117,6 @@
       "post": {
         "tags": ["Decryption"],
         "summary": "Decrypt a price",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/DecryptRequest"
-              }
-            }
-          }
-        },
         "parameters": [
           {
             "name": "encryptionKey",
@@ -120,13 +131,33 @@
             "schema": { "type": "string" }
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "encryptedPrice": {
+                    "type": "string",
+                    "example": "55mPuzTBIUqep2Kx_tebpjBGWi_5Y7jBFAOP"
+                  }
+                },
+                "required": ["encryptedPrice"]
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "Decrypted price",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/DecryptResponse"
+                  "type": "object",
+                  "properties": {
+                    "decryptedPrice": { "type": "string", "example": "123.45" }
+                  }
                 }
               }
             }
@@ -136,7 +167,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "body": { "type": "object" }
+                  }
                 }
               }
             }
@@ -146,7 +181,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
+                  "type": "object",
+                  "properties": {
+                    "error": { "type": "string" },
+                    "details": { "type": "string" }
+                  }
                 }
               }
             }
