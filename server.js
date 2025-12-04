@@ -1,5 +1,6 @@
 // server.js 
 // health, /encrypt, /decrypt
+//http://localhost:3000/api-docs/#/
 
 const express = require('express');
 const swaggerUi = require('swagger-ui-express'); 
@@ -8,11 +9,18 @@ const { encrypt } = require('./encrypt');
 const { decrypt, base64UrlToBuffer } = require('./decrypt');
 const app = express();
 const swaggerDocument = require('./swagger.json'); 
-const fs = require('fs');
 
+// ⚠️ Important on Vercel : serve static swagger ui files
+app.use(
+  "/api-docs",
+  swaggerUi.serveFiles(swaggerDocument),
+  swaggerUi.setup(swaggerDocument)
+);
+
+//use Express
 app.use(express.json());
 
-
+//use swagger UI
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
@@ -23,7 +31,7 @@ app.get('/health', (req, res) => {
 
 // Placeholder encrypt route
 app.post('/encrypt', (req, res) => {
-  console.log("Request body:", req.body); // 🔍 vérifier ce qu'on reçoit
+  console.log("Request body:", req.body); // 🔍 check what we receive
 
   const price = req.body?.price;
   const encryptionKey = req.header('encryptionKey');
