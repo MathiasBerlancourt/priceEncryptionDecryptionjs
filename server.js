@@ -10,12 +10,7 @@ const { decrypt, base64UrlToBuffer } = require('./decrypt');
 const app = express();
 const swaggerDocument = require('./swagger.json'); 
 
-// ⚠️ Important on Vercel : serve static swagger ui files
-app.use(
-  "/api-docs",
-  swaggerUi.serveFiles(swaggerDocument),
-  swaggerUi.setup(swaggerDocument)
-);
+
 
 //use Express
 app.use(express.json());
